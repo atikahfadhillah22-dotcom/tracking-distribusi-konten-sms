@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><title>Tracking Distribusi Konten</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--tx:#1b2438;--mu:#6b7690;--bd:#dde3ef;--navy:#12285a;--sky:#e6f0fd;--c:#12285a;--g:#12285a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#10141f;--card:#1a2030;--tx:#e8ecf6;--mu:#98a3bd;--bd:#2c3550;--sky:#1d2a45}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;min-height:100vh}
+nav{width:210px;background:var(--card);border-right:1px solid var(--bd);padding:16px 10px;position:sticky;top:0;height:100vh;flex-shrink:0}
+nav h1{font-size:15px;margin:4px 10px 14px;color:var(--navy)}
+nav button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--tx);padding:9px 10px;border-radius:8px;font:inherit;cursor:pointer;text-align:left;margin-bottom:2px}
+nav button i{width:10px;height:10px;border-radius:50%;background:var(--k)}
+nav button.on{background:var(--k2);font-weight:600;box-shadow:inset 3px 0 0 var(--k)}
+main{flex:1;min-width:0;padding:22px 26px;max-width:1200px}
+h2{margin:0 0 4px;font-size:22px;border-left:5px solid var(--c);border-image:var(--g) 1;padding-left:10px}
+.sub{color:var(--mu);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:16px}
+.card h3{margin:0 0 10px;font-size:14px;letter-spacing:.04em}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left}
+th{background:var(--sky);font-size:12px;letter-spacing:.04em}
+td.n,th.n{text-align:center}
+tbody tr.cl{cursor:pointer}tbody tr.cl:hover{background:var(--sky)}
+.btn{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:7px 12px;border-radius:8px;font:inherit;cursor:pointer}
+.btn.p{background:var(--c);background-image:var(--g);color:#fff;border-color:transparent;font-weight:600}
+.btn.d{color:#c0392b}.btn.s{padding:4px 8px;font-size:12px}
+input,select,textarea{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:7px 9px;max-width:100%}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.bar input[type=search]{flex:1;min-width:160px}
+.st{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:700;color:#fff}
+.IDE{background:#8a94a6}.PRODUKSI{background:#2f7be5}.SIAP{background:#f28c1b}.SUDAH{background:#27a35a}
+.tag{font-weight:700;font-size:12px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .h{text-align:center;font-size:11px;color:var(--mu);padding:4px}
+.day{min-height:62px;border:1px solid var(--bd);border-radius:8px;padding:4px;cursor:pointer;background:var(--card);font:inherit;color:var(--tx);text-align:left;display:flex;flex-direction:column;gap:2px}
+.day.o{opacity:.4}.day.sel{outline:2px solid var(--navy);background:var(--sky)}.day.td b{color:#fff;background:var(--navy);border-radius:99px;padding:0 6px}
+.dots{display:flex;flex-wrap:wrap;gap:2px}.dots s{text-decoration:none;font-size:10px;color:#fff;border-radius:6px;padding:0 5px;opacity:.85}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{border:1px solid var(--bd);border-left:4px solid var(--k,var(--navy));border-radius:8px;padding:6px 12px;background:var(--card)}
+.chip b{font-size:18px;display:block}.chip span{font-size:11px;color:var(--mu)}
+.ov{position:fixed;inset:0;background:#0007;display:flex;align-items:center;justify-content:center;padding:14px;z-index:9}
+.md{background:var(--card);border-radius:14px;padding:18px;width:100%;max-width:460px;max-height:90vh;overflow:auto}
+.md label{display:block;margin:8px 0 3px;font-size:12px;color:var(--mu)}.md input,.md select,.md textarea{width:100%}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12285a;color:#fff;padding:9px 16px;border-radius:99px;z-index:20;display:none}
+.warn{background:#fff3cd;color:#7a5b00;padding:8px 12px;border-radius:8px;margin-bottom:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:760px){body{flex-direction:column}nav{width:100%;height:auto;position:static;display:flex;overflow-x:auto;padding:8px;gap:2px}nav h1{display:none}nav button{width:auto;white-space:nowrap}main{padding:14px}.day{min-height:48px}.dots s{font-size:9px;padding:0 3px}}
+</style></head><body>
+<nav id="nav"></nav><main id="main"></main><div id="toast"></div><div id="modal"></div>
+<script>
+const P={dashboard:{n:'Dashboard',c:'#12285a',g:'#12285a',bg:'#e6f0fd'},
+tiktok:{n:'TikTok',c:'#111',g:'linear-gradient(#25F4EE,#FE2C55)',bg:'#eaeaea',d:'#25b8b3'},
+youtube:{n:'YouTube',c:'#FF0000',g:'#FF0000',bg:'#ffe9e9',d:'#e00'},
+instagram:{n:'Instagram',c:'#C13584',g:'linear-gradient(135deg,#833AB4,#E1306C,#F77737)',bg:'#f8e8f3',d:'#C13584'},
+facebook:{n:'Facebook',c:'#1877F2',g:'#1877F2',bg:'#e5effe',d:'#1877F2'},
+shopee:{n:'Shopee',c:'#EE4D2D',g:'#EE4D2D',bg:'#ffece7',d:'#EE4D2D'}};
+const PL=['tiktok','youtube','instagram','facebook','shopee'];
+const PIL=['PRODUK KNOWLAGE','EDUKASI','PROMOSI','TREND','TESTIMONI'],JEN=['NON KERKUN','KERKUN'];
+const STA=[['IDE','IDE'],['PRODUKSI','PRODUKSI'],['SIAP UPLOAD','SIAP'],['SUDAH UPLOAD','SUDAH']];
+const MON=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+let items=[],pics=[],page='dashboard',live=false,col=null,picDoc=null;
+const now=new Date(),iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+let cal={m:now.getMonth(),y:now.getFullYear(),sel:iso(now),from:'',to:''};
+let F={q:'',pilar:'',jenis:'',pic:'',status:'',from:'',to:'',sort:'date-desc'};
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fd=d=>d?d.split('-').reverse().join('/'):'';
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2200)}
+/* ---- storage: shared db if available, else localStorage ---- */
+const LS={get:k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+async function initStore(){
+ let db=null;try{db=await claude.use('db')}catch(e){}
+ if(db){live=true;col=db.collection('items');picDoc=db.doc('settings/pics');
+  col.onSnapshot(s=>{items=s.docs.map(d=>d.data());render()},e=>{toast('Gagal memuat data: '+e.message)});
+  picDoc.onSnapshot(s=>{pics=s.exists?(s.data().list||[]):[];render()},()=>{});
+ }else{items=LS.get('tk_items')||[];pics=LS.get('tk_pics')||[];render()}
+}
+async function saveItem(it){const k=it.platform+'_'+it.id;
+ if(live)await col.doc(k).set(it);else{items=items.filter(x=>!(x.platform==it.platform&&x.id==it.id));items.push(it);LS.set('tk_items',items)}}
+async function delItem(it){if(live)await col.doc(it.platform+'_'+it.id).delete();else{items=items.filter(x=>x!==it);LS.set('tk_items',items)}}
+async function savePics(l){pics=l;if(live)await picDoc.set({list:l});else LS.set('tk_pics',l)}
+/* ---- recap ---- */
+const valid=i=>PL.includes(i.platform)&&i.date;
+function recap(list){const r={t:list.length,p:{},pil:{},j:{}};PL.forEach(p=>r.p[p]=0);PIL.forEach(x=>r.pil[x]=0);JEN.forEach(x=>r.j[x]=0);
+ list.forEach(i=>{r.p[i.platform]++;if(r.pil[i.pilar]!==undefined)r.pil[i.pilar]++;if(r.j[i.jenis]!==undefined)r.j[i.jenis]++});return r}
+const cnt=(p,k,v)=>items.filter(i=>i.platform==p&&i[k]==v).length;
+const stCls=s=>(STA.find(x=>x[0]==s)||[0,''])[1];
+function theme(p){const t=P[p];document.documentElement.style.setProperty('--c',t.c);document.documentElement.style.setProperty('--g',t.g)}
+/* ---- render ---- */
+function render(){
+ if($('#modal').firstChild&&document.activeElement&&$('#modal').contains(document.activeElement))return;
+ theme(page);
+ $('#nav').innerHTML='<h1>📊 Tracking Konten</h1>'+Object.keys(P).map(k=>`<button class="${k==page?'on':''}" style="--k:${P[k].c};--k2:${P[k].bg}" data-go="${k}"><i style="background:${P[k].g}"></i>${P[k].n}</button>`).join('');
+ const keep=document.activeElement&&document.activeElement.id,pos=document.activeElement&&document.activeElement.selectionStart;
+ $('#main').innerHTML=(live?'':'<div class="warn">Mode lokal: data hanya tersimpan di browser ini (penyimpanan bersama tidak tersedia).</div>')+(page=='dashboard'?dash():plat(page));
+ if(keep&&$('#'+keep)){const e=$('#'+keep);e.focus();try{e.setSelectionRange(pos,pos)}catch(x){}}
+}
+function dash(){
+ const th=PL.map(p=>`<th class="n" style="border-top:3px solid ${P[p].c}">${P[p].n.toUpperCase()}</th>`).join('');
+ const tb=(rows,k)=>rows.map(v=>`<tr><td><b>${v}</b></td>${PL.map(p=>`<td class="n">${cnt(p,k,v)}</td>`).join('')}</tr>`).join('');
+ return `<h2>Dashboard</h2><p class="sub">Rekap otomatis dari seluruh platform</p>
+<div class="card"><h3>TOTAL KONTEN</h3><div class="wrap"><table><thead><tr><th>PILAR</th>${th}</tr></thead><tbody>${tb(PIL,'pilar')}</tbody></table></div></div>
+<div class="card"><h3>TOTAL KONTEN</h3><div class="wrap"><table><thead><tr><th>JENIS KONTEN</th>${th}</tr></thead><tbody>${tb(JEN,'jenis')}</tbody></table></div></div>`+calendar();
+}
+function chips(r){return `<div class="chips"><div class="chip"><b>${r.t}</b><span>TOTAL</span></div>`+PL.map(p=>`<div class="chip" style="--k:${P[p].c}"><b>${r.p[p]}</b><span>${P[p].n}</span></div>`).join('')+'</div><div class="chips">'+PIL.map(x=>`<div class="chip"><b>${r.pil[x]}</b><span>${x}</span></div>`).join('')+JEN.map(x=>`<div class="chip" style="--k:#f5b700"><b>${r.j[x]}</b><span>${x}</span></div>`).join('')+'</div>'}
+function list(l){if(!l.length)return '';return `<div class="wrap"><table><thead><tr><th>ID</th><th>Tanggal</th><th>Platform</th><th>Pilar</th><th>Jenis Konten</th><th>PIC</th><th>Status</th><th>Catatan</th></tr></thead><tbody>`+l.map(i=>`<tr class="cl" data-open="${i.platform}|${i.id}"><td>${i.id}</td><td>${fd(i.date)}</td><td class="tag" style="color:${P[i.platform].c}">${P[i.platform].n}</td><td>${esc(i.pilar)}</td><td>${esc(i.jenis)}</td><td>${esc(i.pic)}</td><td><span class="st ${stCls(i.status)}">${esc(i.status)}</span></td><td>${esc(i.catatan)}</td></tr>`).join('')+'</tbody></table></div>'}
+function calendar(){
+ const v=items.filter(valid),by={};v.forEach(i=>{(by[i.date]=by[i.date]||{})[i.platform]=((by[i.date]||{})[i.platform]||0)+1});
+ const first=new Date(cal.y,cal.m,1),off=(first.getDay()+6)%7,dim=new Date(cal.y,cal.m+1,0).getDate();
+ let cells=['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(d=>`<div class="h">${d}</div>`).join('');
+ for(let i=0;i<off;i++)cells+='<div></div>';
+ for(let d=1;d<=dim;d++){const k=cal.y+'-'+String(cal.m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'),b=by[k]||{};
+  cells+=`<button class="day ${k==cal.sel?'sel':''} ${k==iso(now)?'td':''}" data-day="${k}"><b>${d}</b><span class="dots">${PL.filter(p=>b[p]).map(p=>`<s style="background:${P[p].d||P[p].c}">${b[p]}</s>`).join('')}</span></button>`}
+ const yrs=[];for(let y=2020;y<=2035;y++)yrs.push(y);
+ const day=v.filter(i=>i.date==cal.sel),mp=cal.y+'-'+String(cal.m+1).padStart(2,'0');
+ let ml=v.filter(i=>i.date.startsWith(mp)),rng=cal.from||cal.to;
+ if(rng)ml=v.filter(i=>(!cal.from||i.date>=cal.from)&&(!cal.to||i.date<=cal.to));
+ ml.sort((a,b)=>a.date<b.date?-1:1);
+ return `<div class="card"><h3>KALENDER DISTRIBUSI KONTEN</h3>
+<div class="bar"><button class="btn" data-mv="-1">‹</button><select id="cm">${MON.map((m,i)=>`<option value="${i}" ${i==cal.m?'selected':''}>${m}</option>`).join('')}</select><select id="cy">${yrs.map(y=>`<option ${y==cal.y?'selected':''}>${y}</option>`).join('')}</select><button class="btn" data-mv="1">›</button><button class="btn" data-today="1">Hari ini</button></div>
+<div class="cal">${cells}</div></div>
+<div class="card"><h3>REKAP TANGGAL ${fd(cal.sel)}</h3>${day.length?chips(recap(day))+list(day):'<p>Belum ada konten yang tercatat pada tanggal ini.</p>'}</div>
+<div class="card"><h3>REKAP ${rng?'PERIODE '+(fd(cal.from)||'…')+' – '+(fd(cal.to)||'…'):MON[cal.m].toUpperCase()+' '+cal.y}</h3>
+<div class="bar"><span>Filter periode:</span><input type="date" id="cf" value="${cal.from}"><input type="date" id="ct" value="${cal.to}"><button class="btn s" data-clr="1">Reset</button></div>
+${ml.length?chips(recap(ml))+list(ml):'<p>Belum ada konten pada periode ini.</p>'}</div>`}
+function plat(p){
+ let l=items.filter(i=>i.platform==p);
+ const q=F.q.trim().toLowerCase();
+ l=l.filter(i=>(!q||(q[0]=='#'?String(i.id)==q.slice(1):[i.id,i.pilar,i.jenis,i.pic,i.status,i.catatan,fd(i.date)].join(' ').toLowerCase().includes(q)))&&(!F.pilar||i.pilar==F.pilar)&&(!F.jenis||i.jenis==F.jenis)&&(!F.pic||i.pic==F.pic)&&(!F.status||i.status==F.status)&&(!F.from||i.date>=F.from)&&(!F.to||i.date<=F.to));
+ const[s,dir]=F.sort.split('-');l.sort((a,b)=>{const x=s=='id'?a.id-b.id:(a.date||'').localeCompare(b.date||'')||a.id-b.id;return dir=='asc'?x:-x});
+ const op=(a,v)=>a.map(x=>`<option ${x==v?'selected':''}>${esc(x)}</option>`).join('');
+ const allp=[...new Set([...pics,...items.filter(i=>i.platform==p).map(i=>i.pic)].filter(Boolean))];
+ return `<h2>${P[p].n}</h2><p class="sub">${items.filter(i=>i.platform==p).length} konten tercatat</p>
+<div class="card"><div class="bar"><input type="search" id="fq" placeholder="Cari konten… (#12 untuk ID)" value="${esc(F.q)}"><button class="btn p" data-add="1">+ Tambah Konten</button><button class="btn" data-pics="1">Kelola PIC</button></div>
+<div class="bar"><select id="fp"><option value="">Semua pilar</option>${op(PIL,F.pilar)}</select><select id="fj"><option value="">Semua jenis</option>${op(JEN,F.jenis)}</select><select id="fc"><option value="">Semua PIC</option>${op(allp,F.pic)}</select><select id="fs"><option value="">Semua status</option>${op(STA.map(x=>x[0]),F.status)}</select>
+<input type="date" id="ff" value="${F.from}" title="Dari tanggal"><input type="date" id="ft" value="${F.to}" title="Sampai tanggal"><select id="fo">${[['date-desc','Tanggal ↓'],['date-asc','Tanggal ↑'],['id-asc','ID ↑'],['id-desc','ID ↓']].map(o=>`<option value="${o[0]}" ${F.sort==o[0]?'selected':''}>${o[1]}</option>`).join('')}</select><button class="btn s" data-rf="1">Reset</button></div>
+<div class="wrap"><table><thead><tr><th>ID</th><th>Tanggal</th><th>Pilar</th><th>Jenis Konten</th><th>PIC</th><th>Status</th><th>Catatan</th><th></th></tr></thead><tbody>${l.length?l.map(i=>`<tr><td>${i.id}</td><td>${fd(i.date)}</td><td>${esc(i.pilar)}</td><td>${esc(i.jenis)}</td><td>${esc(i.pic)}</td><td><span class="st ${stCls(i.status)}">${esc(i.status)}</span></td><td>${esc(i.catatan)}</td><td style="white-space:nowrap"><button class="btn s" data-edit="${i.id}">Edit</button> <button class="btn s d" data-del="${i.id}">Hapus</button></td></tr>`).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--mu)">Belum ada data.</td></tr>'}</tbody></table></div></div>`}
+/* ---- modal ---- */
+function modal(h){$('#modal').innerHTML=`<div class="ov"><div class="md">${h}</div></div>`}
+function close(){$('#modal').innerHTML='';render()}
+function form(it){
+ const e=!!it;it=it||{date:iso(now),pilar:PIL[0],jenis:JEN[0],status:'IDE',pic:'',catatan:''};
+ const op=(a,v)=>a.map(x=>`<option ${x==v?'selected':''}>${esc(x)}</option>`).join('');
+ modal(`<h3 style="margin:0">${e?'Edit':'Tambah'} Konten — ${P[page].n}</h3>
+<label>Tanggal</label><input type="date" id="m_d" value="${it.date||''}">
+<div class="row2"><div><label>Pilar</label><select id="m_p">${op(PIL,it.pilar)}</select></div><div><label>Jenis Konten</label><select id="m_j">${op(JEN,it.jenis)}</select></div></div>
+<div class="row2"><div><label>PIC</label><input id="m_c" list="pl" value="${esc(it.pic)}" placeholder="Pilih / ketik nama"><datalist id="pl">${pics.map(x=>`<option>${esc(x)}</option>`).join('')}</datalist></div><div><label>Status</label><select id="m_s">${op(STA.map(x=>x[0]),it.status)}</select></div></div>
+<label>Catatan</label><textarea id="m_n" rows="3">${esc(it.catatan)}</textarea>
+<div class="bar" style="margin:14px 0 0;justify-content:flex-end"><button class="btn" data-close="1">Batal</button><button class="btn p" data-save="${e?it.id:''}">Simpan</button></div>`)}
+async function save(id){
+ const d=$('#m_d').value;if(!d)return toast('Tanggal wajib diisi');
+ const pic=$('#m_c').value.trim();
+ const nid=id?+id:Math.max(0,...items.filter(i=>i.platform==page).map(i=>+i.id))+1;
+ const it={platform:page,id:nid,date:d,pilar:$('#m_p').value,jenis:$('#m_j').value,pic,status:$('#m_s').value,catatan:$('#m_n').value.trim()};
+ try{await saveItem(it);if(pic&&!pics.includes(pic))await savePics([...pics,pic]);toast('Data berhasil disimpan');close()}catch(e){toast('Gagal menyimpan: '+(e.message||e))}}
+function picsModal(){modal(`<h3 style="margin:0 0 8px">Kelola PIC</h3>${pics.map((x,i)=>`<div class="bar" style="margin:4px 0"><span style="flex:1">${esc(x)}</span><button class="btn s d" data-pd="${i}">Hapus</button></div>`).join('')||'<p style="color:var(--mu)">Belum ada PIC.</p>'}
+<div class="bar"><input id="np" placeholder="Nama PIC baru" style="flex:1"><button class="btn p" data-pa="1">Tambah</button></div><div style="text-align:right"><button class="btn" data-close="1">Tutup</button></div>`)}
+/* ---- events ---- */
+document.addEventListener('click',async ev=>{
+ const t=ev.target.closest('[data-go],[data-mv],[data-day],[data-today],[data-clr],[data-open],[data-add],[data-edit],[data-del],[data-save],[data-close],[data-pics],[data-pa],[data-pd],[data-rf],[data-yes]');if(!t)return;const d=t.dataset;
+ if(d.go){page=d.go;render();scrollTo(0,0)}
+ else if(d.mv){cal.m+=+d.mv;if(cal.m<0){cal.m=11;cal.y--}if(cal.m>11){cal.m=0;cal.y++}render()}
+ else if(d.day){cal.sel=d.day;render()}
+ else if(d.today){cal.m=now.getMonth();cal.y=now.getFullYear();cal.sel=iso(now);render()}
+ else if(d.clr){cal.from=cal.to='';render()}
+ else if(d.open){const[p,id]=d.open.split('|');page=p;F={...F,q:'#'+id};render();scrollTo(0,0)}
+ else if(d.add!==undefined)form();
+ else if(d.edit)form(items.find(i=>i.platform==page&&i.id==d.edit));
+ else if(d.del){const it=items.find(i=>i.platform==page&&i.id==d.del);window._del=it;modal(`<h3 style="margin:0 0 8px">Hapus konten?</h3><p>ID ${it.id} (${fd(it.date)}, ${esc(it.pilar)}) akan dihapus permanen.</p><div style="text-align:right" class="bar"><button class="btn" data-close="1">Batal</button><button class="btn p" data-yes="1" style="background:#c0392b">Ya, hapus</button></div>`)}
+ else if(d.yes){try{await delItem(window._del);toast('Data berhasil dihapus')}catch(e){toast('Gagal menghapus: '+(e.message||e))}close()}
+ else if(d.save!==undefined)save(d.save);
+ else if(d.close)close();
+ else if(d.pics)picsModal();
+ else if(d.pa){const v=$('#np').value.trim();if(v&&!pics.includes(v)){await savePics([...pics,v]);toast('PIC ditambahkan')}picsModal()}
+ else if(d.pd!==undefined){await savePics(pics.filter((_,i)=>i!=d.pd));picsModal()}
+ else if(d.rf){F={q:'',pilar:'',jenis:'',pic:'',status:'',from:'',to:'',sort:F.sort};render()}
+});
+document.addEventListener('input',e=>{const id=e.target.id;if(id=='fq'){F.q=e.target.value;render()}});
+document.addEventListener('change',e=>{const id=e.target.id,v=e.target.value,m={fp:'pilar',fj:'jenis',fc:'pic',fs:'status',ff:'from',ft:'to',fo:'sort'};
+ if(m[id]){F[m[id]]=v;render()}else if(id=='cm'){cal.m=+v;render()}else if(id=='cy'){cal.y=+v;render()}else if(id=='cf'){cal.from=v;render()}else if(id=='ct'){cal.to=v;render()}});
+render();initStore();
+</script></body></html>
